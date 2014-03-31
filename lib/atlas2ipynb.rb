@@ -1,9 +1,11 @@
-require 'nokogiri'
-require 'json'
-require 'active_support/inflector'
 
 module Atlas2ipynb
   
+  require 'nokogiri'
+  require 'json'
+  require 'i18n'
+  require 'active_support/inflector'
+
 
   #*************************************************************************************
   # ipynb uses the plain filename as the user's index page, so we need to make something
@@ -17,8 +19,8 @@ module Atlas2ipynb
   # string is less than 50 chars long, but breaks it on a word boundry so that it 
   # looks "nice"
   #*************************************************************************************
-  def string_to_filename(s)
-     I18n.enforce_available_locales = false
+  def self.string_to_filename(s)
+     #I18n.enforce_available_locales = false
      out = ActiveSupport::Inflector.transliterate(s).downcase
      out.gsub!(/^.*(\\|\/)/,'')
      out.gsub!(/[^0-9A-Za-z]/,"_")
@@ -35,7 +37,7 @@ module Atlas2ipynb
   # planned to convert HTML to markdown, this proved infeasible with all the many
   # edge cases in conversion, such has mathml
   #*************************************************************************************
-  def process_section(n, level, out) 
+  def self.process_section(n, level, out) 
     n.children.each do |c|  
        case c.name
           when "section"
@@ -73,7 +75,7 @@ module Atlas2ipynb
   # post-processing on the image links, and then calls process_section to convert
   # each element to the corrseponding ipynb cell type (markdown, header, or code)
   #*************************************************************************************
-  def html_to_ipynb(fn)
+  def self.html_to_ipynb(fn)
     #
     # Open the file and parse it w/nokogiri
     doc = Nokogiri::HTML(IO.read(fn), nil, 'utf-8')
@@ -100,7 +102,7 @@ module Atlas2ipynb
      "nbformat_minor"=> 0,
      "worksheets" => [
       {
-       "cells" => process_section(doc.css("section").first,1, []),  
+       "cells" => self.process_section(doc.css("section").first,1, []),  
        "metadata" => {}
       }
      ]
@@ -112,12 +114,12 @@ module Atlas2ipynb
   #*************************************************************************************
   # Convert all chapter files in the directory into ipynb
   #*************************************************************************************
-  def convert
+  def self.convert
     Dir["ch*.html"].each do |fn|
       out = html_to_ipynb(fn)
       # Compute the new filename, which is the original filename 
       # with the ".html" (last 5 chars) replaced with ".ipynb".   
-      title_fn = string_to_filename(out['metadata']['name'])
+      title_fn = self.string_to_filename(out['metadata']['name'])
       ipynb_fn = "#{fn[0,fn.length-5]}_#{title_fn}.ipynb"
       puts "Converting #{title_fn} to #{ipynb_fn}"
       # Create the file
