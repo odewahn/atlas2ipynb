@@ -5,4 +5,5 @@ require 'rubygems'
 require 'atlas2ipynb'
 
 
-Atlas2ipynb::convert
+c = Atlas2ipynb::Converter.new
+c.convert!
