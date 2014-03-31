@@ -1,10 +1,10 @@
 require "atlas2ipynb/version"
+require 'nokogiri'
+require 'json'
+require 'active_support/inflector'
 
 module Atlas2ipynb
   
-  require 'nokogiri'
-  require 'json'
-  require 'active_support/inflector'
 
   #*************************************************************************************
   # ipynb uses the plain filename as the user's index page, so we need to make something
@@ -108,6 +108,24 @@ module Atlas2ipynb
     }
     return notebook
   end
-
+  
+  
+  #*************************************************************************************
+  # Convert all chapter files in the directory into ipynb
+  #*************************************************************************************
+  def convert
+    Dir["ch*.html"].each do |fn|
+      out = html_to_ipynb(fn)
+      # Compute the new filename, which is the original filename 
+      # with the ".html" (last 5 chars) replaced with ".ipynb".   
+      title_fn = string_to_filename(out['metadata']['name'])
+      ipynb_fn = "#{fn[0,fn.length-5]}_#{title_fn}.ipynb"
+      puts "Converting #{title_fn} to #{ipynb_fn}"
+      # Create the file
+      f = File.open(ipynb_fn, 'w')
+      f.write JSON.pretty_generate(out)
+      f.close
+    end
+  end
   
 end
