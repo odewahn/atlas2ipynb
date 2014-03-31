@@ -1,4 +1,3 @@
-require "atlas2ipynb/version"
 require 'nokogiri'
 require 'json'
 require 'active_support/inflector'
