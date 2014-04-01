@@ -1,6 +1,6 @@
 # Atlas2ipynb
 
-TODO: Write a gem description
+This gem converts the HTML files from Atlas into iPython Notebooks.
 
 ## Installation
 
@@ -18,7 +18,17 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+Here's what you need to do:
+
+* Write your project in http://atlas.oreilly.com[Atlas]
+* Get a working HTML build
+* Download and unzip the build
+* Run "atlas2ipynb" in the directory where you downloaded the files
+* Start the iPytnon notebook server
+
+## TODO:
+
+* Integrate the atlas-api gem so that you can also build, download, unzip, and convert directly from the command line
 
 ## Contributing
 

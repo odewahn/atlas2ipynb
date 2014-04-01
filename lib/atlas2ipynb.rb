@@ -44,8 +44,8 @@ module Atlas2ipynb
     def process_section(n, level, out) 
       n.children.each do |c|  
          case c.name
-            when "section"
-              process_section(c, level+1, out) # since a section is just a container, we need to recurse to get the content                
+            when "section", "span", "div"
+              process_section(c, level+1, out) # since ipynb is flat,  we need to recurse on sections                
             when "h1", "h2", "h3", "h4", "h4", "h5", "h6"
               out << {
                  "cell_type" => "heading",
@@ -53,7 +53,7 @@ module Atlas2ipynb
                  "metadata" => {}, 
                  "source" => c.text
                }
-            when "pre","code"
+            when "pre", "code"
               out << {   
                  "cell_type" => "code",
                  "collapsed" => false,
@@ -119,7 +119,7 @@ module Atlas2ipynb
     # Convert all chapter files in the directory into ipynb
     #*************************************************************************************
     def convert!
-      puts "Searching for ch*.html files from Atlas"
+      puts "Searching for ch*.html files from Atlas yeah"
       Dir["ch*.html"].each do |fn|
         out = html_to_ipynb(fn)
         # Compute the new filename, which is the original filename 
