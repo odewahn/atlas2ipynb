@@ -4,8 +4,8 @@ require 'i18n'
 require 'active_support/inflector'
 
 # If running in irb, don't forget to do this:
-#    require 'bundler'
-#    Bundler.require
+# require 'bundler'
+# Bundler.require
 #
 module Atlas2ipynb
   
