@@ -1,6 +1,7 @@
 # Atlas2ipynb
 
-This gem converts the HTML files from Atlas into iPython Notebooks.
+This gem converts the HTML files from Atlas into iPython Notebooks.  Basically, it uses the fact that HTML is  considered valid markdown, so the gem basically just flattens the output from the HTML build from Atlas and makes each element into a corresponding ipynb "cell".
+
 
 ## Installation
 
@@ -18,18 +19,25 @@ Or install it yourself as:
 
 ## Usage
 
-Here's what you need to do:
+To use this gem, you write your project in http://atlas.oreilly.com[Atlas].  Once you get a working HTML build, can generate a notebook like this:
 
-* Write your project in http://atlas.oreilly.com[Atlas]
-* Get a working HTML build
-* Download and unzip the build
-* Run "atlas2ipynb" in the directory where you downloaded the files
-* Start the iPytnon notebook server
+```
+   atlas2ipynb _ATLAS-API-TOKEN_ _PROJECT-NAME_
+````
+
+For example:
+
+```
+   atlas2ipynb r1pB4y95uMxT3m8t9zRf oreillymedia/razzpisampler
+````
+
+Note that you must have *curl* and *unzip* installed to (respectively) download and unpack the build.
 
 ## TODO:
 
-* Integrate the atlas-api gem so that you can also build, download, unzip, and convert directly from the command line
+* The converter assumes that HTML is valid markdown per the markdown spec, but ipython 2.0 seems to say that embedded markdown will never be trusted.  If so, the approah here won't work.
 
+ 
 ## Contributing
 
 1. Fork it ( http://github.com/<my-github-username>/atlas2ipynb/fork )

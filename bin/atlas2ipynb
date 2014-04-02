@@ -1,9 +1,69 @@
 #!/usr/bin/env ruby
 # encoding: UTF-8
 
-require 'rubygems'
+require 'atlas-api'
 require 'atlas2ipynb'
 
+ENDPOINT = "https://atlas.oreilly.com/api"
 
-c = Atlas2ipynb::Converter.new
-c.convert!
+atlas_token=ARGV[0]
+project = ARGV[1]   
+branch="master"
+
+fn = project.split("/").pop
+
+client = Atlas::Api::Client.new(
+  :auth_token => atlas_token,
+  :api_endpoint => ENDPOINT
+)
+
+query = {
+  :project => project,
+  :formats => "html",
+  :branch => branch
+}
+
+#
+# Run the build and display the error messages
+#
+puts "Building #{project}"
+@last_response = client.build_and_poll(query)
+
+@last_response.status.each do |format|
+  puts "#{format.format.upcase} Build Info"
+  puts "--------------------------------------------------"
+  
+  if format.message.is_a?(Hash)
+    format.message.each do |k,v|
+      puts "#{k}".capitalize
+      if v.is_a?(Array)
+        v.each do |me|
+          puts "- #{me}"
+        end
+      else
+        puts "- #{v}"
+      end
+    end
+  else
+    puts "#{format.message}"
+  end
+
+  puts ""
+end
+
+#
+# Download and unzip the HTML build, and then convert it to ipynb
+#
+@last_response.status.each do |format|  
+  puts "Downloading #{project}"
+  `curl #{format.download_url} > #{fn}.zip`
+  `unzip #{fn}.zip -d #{fn}`
+   Dir.chdir("#{Dir.pwd}/#{fn}"){
+    converter = Atlas2ipynb::Converter.new
+    converter.convert!
+  }
+end
+
+puts "\nAssuming things when ok, you can view the notebook by:"
+puts "   cd #{fn}"
+puts "   nbserver"
