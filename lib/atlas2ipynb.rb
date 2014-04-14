@@ -54,11 +54,18 @@ module Atlas2ipynb
                  "source" => c.text
                }
             when "pre", "code"
+              # test for the code type.  If it's not python, then insert the 
+              # appropriate cell magics
+              listing = c.text
+              code_type = c.attributes["data-code-language"] || "python"
+              if code_type != "python"
+                 listing = "%%#{code_type}\n#{listing}"
+              end
               out << {   
                  "cell_type" => "code",
                  "collapsed" => false,
-                 "input" => c.text, 
-                 "language" => c.attributes["data-code-language"] || "python",
+                 "input" => listing, 
+                 "language" => code_type,
                  "metadata" => {}, 
                  "outputs" => []
                }
