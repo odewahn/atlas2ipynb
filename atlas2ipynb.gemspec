@@ -4,7 +4,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
 Gem::Specification.new do |spec|
   spec.name          = "atlas2ipynb"
-  spec.version       = "0.0.8"
+  spec.version       = "0.0.9"
   spec.authors       = ["Andrew Odewahn"]
   spec.email         = ["odewahn@oreilly.com"]
   spec.summary       = %q{Converts Atlas HTML build into iPythyon Notebooks.}

@@ -57,11 +57,8 @@ end
 @last_response.status.each do |format|  
   puts "Downloading #{project}"
   `curl #{format.download_url} > #{fn}.zip`
-  `unzip #{fn}.zip -d #{fn}`
-   Dir.chdir("#{Dir.pwd}/#{fn}"){
-    converter = Atlas2ipynb::Converter.new
-    converter.convert!
-  }
+  `unzip #{fn}.zip`
+   converter = Atlas2ipynb::Converter.new
 end
 
 puts "\nAssuming things when ok, you can view the notebook by:"
